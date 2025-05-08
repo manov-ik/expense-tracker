@@ -7,7 +7,7 @@ function AddExpense() {
     <div>
       <h2>Add Expense for: {timeslot.toUpperCase()}</h2>
 
-      {/* Load available foods */}
+      {/*   Load available foods */}
       {/* Allow selecting food items */}
       {/* Submit selected foods to backend with the timeslot info */}
     </div>
