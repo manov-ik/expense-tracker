@@ -2,19 +2,10 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlmodel import Session, select,SQLModel,Field
 from typing import List
 from models import Food
-from db import engine
-
-
-class Food(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    name: str = Field(index=True)
-    price: float
+from db import get_session
 
 router = APIRouter()
 
-def get_session():
-    with Session(engine) as session:
-        yield session
 
 @router.post("/", response_model=Food) # new food
 def create_food(food: Food, session: Session = Depends(get_session)):
@@ -49,12 +40,17 @@ def update_food(food_id: int, updated_food: Food, session: Session = Depends(get
     session.refresh(food)
     return food
 
-# Delete a food
-@router.delete("/{food_id}")
+@router.delete("/{food_id}") # delete a food
 def delete_food(food_id: int, session: Session = Depends(get_session)):
     food = session.get(Food, food_id)
     if not food:
         raise HTTPException(status_code=404, detail="Food not found")
     session.delete(food)
+    session.commit()
+    return {"ok": True}
+
+@router.delete("/delete-all") # delete all foods
+def delete_all_foods(session: Session = Depends(get_session)):
+    session.get(Food).delete()
     session.commit()
     return {"ok": True}
