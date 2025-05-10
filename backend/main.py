@@ -2,12 +2,13 @@ from typing import Union
 from fastapi import FastAPI
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 from datetime import datetime
-from routers import food
+from routers import food, expenses
 
 app = FastAPI()
 
 
 app.include_router(food.router, prefix="/food", tags=["food"])
+app.include_router(expenses.router, prefix="/expenses", tags=["expenses"])
 
 
 

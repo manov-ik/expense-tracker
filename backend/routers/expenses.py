@@ -42,3 +42,14 @@ def get_expense_items(expense_id: int, session: Session = Depends(get_session)):
     statement = select(ExpenseItem).where(ExpenseItem.expense_id == expense_id)
     items = session.exec(statement).all()
     return items
+
+@router.get("/get-all-items/")
+def get_all_items(session: Session = Depends(get_session)):
+    items = session.exec(select(ExpenseItem)).all()
+    return items
+
+@router.delete("/delete-all/")
+def delete_all_items(session: Session = Depends(get_session)):
+    session.query(ExpenseItem).delete()
+    session.commit()
+    return {"message": "All items deleted"}
